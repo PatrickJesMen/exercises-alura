@@ -6,6 +6,12 @@ from random import randint
 from os import system
 from time import sleep
 
+# Constants of Colors and Texts
+PROGRAM_PREFIX = "\033[35m[PROGRAM]\033[0m"
+USER_PREFIX = "\033[33m[YOU]\033[0m"
+COLOR_RED = "\033[31m"
+COLOR_RESET = "\033[0m"
+
 # Functions
 def clear():
     system('cls')
@@ -23,32 +29,32 @@ def game_logic(level):
     clear()
 
     chosen_number = number_generator(level)
-    choosed_numbers = []
+    guessed_numbers = []
     proceed = True
     attempts = 1
 
 
     while proceed:
         try:
-            print("\033[35m[PROGRAM]\033[0m Enter a number!\n")
+            print(f"{PROGRAM_PREFIX} Enter a number!\n")
             
-            if len(choosed_numbers) > 0:
-                print(f"Already numbers choosed: {choosed_numbers}")
+            if len(guessed_numbers) > 0:
+                print(f"Numbers already guessed: {guessed_numbers}")
 
-            CHOICE = int(input("\033[33m[YOU]\033[0m "))
+            choice = int(input(f"{USER_PREFIX} "))
 
-            distance = abs(chosen_number - CHOICE) 
+            distance = abs(chosen_number - choice) 
 
-            if CHOICE == chosen_number:
+            if choice == chosen_number:
                 proceed = False
             else:
-                print("\n\033[31mWrong! Try again.\033[0m")
+                print(f"{COLOR_RED}Wrong! Try again.{COLOR_RESET}")
 
                 if distance <= 2:
                     print("TIP: Extremely close! You are almost there.")
                 elif distance <= 5:
                     print("TIP: You're getting warmer. Very close now.")
-                elif 5 < distance < 20:
+                elif distance < 20:
                     print("TIP: Not quite. You are within range, but still a bit off.")     
                 elif distance >= 20:
                     print("TIP: You are quite far from the target. Keep searching! ")
@@ -56,12 +62,12 @@ def game_logic(level):
                 sleep(1)
 
                 clear()
-                choosed_numbers.append(CHOICE)
-                choosed_numbers.sort()
+                guessed_numbers.append(choice)
+                guessed_numbers.sort()
                 attempts+=1
 
 
-        except:
+        except ValueError:
             print("Invalid value. Try again!")
     
     clear()
@@ -71,41 +77,41 @@ def start_program():
     clear()
 
     # First dialog
-    print("\033[35m[PROGRAM]\033[0m Hello! Can you say your name?\n")
-    NAME = input("\033[33m[YOU]\033[0m ")
+    print(f"{PROGRAM_PREFIX} Hello! Can you say your name?\n")
+    name = input(f"{USER_PREFIX} ")
     sleep(1)
 
     # Second dialog
     proceed = True
+    print(f"\n{PROGRAM_PREFIX} {name}, what a great name! OK, let's start the game!\n") 
 
     while proceed: 
-        print(f"\n\033[35m[PROGRAM]\033[0m {NAME}, what a great name! OK, let's start the game!\n") 
         sleep(0.5)
-        print("\033[35m[PROGRAM]\033[0m Please, select one of the following difficulty levels:\n1. EASY\n2. MEDIUM\n3. HARD\n")
+        print(f"{PROGRAM_PREFIX} Please, select one of the following difficulty levels:\n1. EASY\n2. MEDIUM\n3. HARD\n")
         sleep(0.5)
-        CHOICE = input("\033[33m[YOU]\033[0m ").upper()
+        choice = input(f"{USER_PREFIX} ").upper()
         sleep(1)
 
-        match CHOICE:
+        match choice:
             case "1" | "EASY":
-                CHOICE = 1
+                choice = 1
                 proceed = False
             case "2" | "MEDIUM":
-                CHOICE = 2
+                choice = 2
                 proceed = False
             case "3" | "HARD":
-                CHOICE = 3
+                choice = 3
                 proceed = False
             case _:
                 print("Invalid value. Try again please!")
                 sleep(1)
 
     # Third dialog
-    print("\n\033[35m[PROGRAM]\033[0m OK. Difficulty choosed. Starting program.\n")
+    print(f"\n{PROGRAM_PREFIX} OK. Difficulty chosen. Starting program.\n")
     sleep(1)
 
     # Game started
-    game_logic(CHOICE)
+    game_logic(choice)
 
 # Start program
 if __name__ == '__main__':
